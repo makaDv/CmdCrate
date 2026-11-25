@@ -11,9 +11,10 @@
 #   3. starts CmdCrate.ps1 (GUI). Nothing is installed until you press "Install".
 # No data is collected or sent anywhere.
 param(
-    [ValidatePattern('^[A-Za-z0-9._\-/]+$')]
+    [ValidatePattern('^[A-Za-z0-9][A-Za-z0-9._\-]*$')]
     [string]$Ref = 'main'
 )
+if ($Ref -match '\.\.') { throw 'Invalid -Ref' }
 
 $ErrorActionPreference = 'Stop'
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12

@@ -33,7 +33,9 @@ Pin a specific release instead of `main`:
 
 ### Features
 
-- **GUI** (WPF, built into Windows): categories, search, select all/none per category, "Recommended" preset, link to each app's official website.
+- **GUI** (WPF, built into Windows): categories, search, select all/none per category, link to each app's official website.
+- **Recommended** (★): one click selects the recommended apps that are not installed yet.
+- **No admin needed**: run CmdCrate as a normal user; installers that need it ask for UAC on their own.
 - **Already-installed detection**: apps already on your PC are marked ✓.
 - **Export / Import**: export the apps installed on your current PC to a JSON file (`winget export`), then import it after a reset to preselect the same apps. Apps not in the catalog are added under "Imported".
 - **Save selection** to a file to reuse it on other PCs.
@@ -43,6 +45,8 @@ Pin a specific release instead of `main`:
   .\CmdCrate.ps1 -Import .\my-apps.export.json         # install from an export file
   .\CmdCrate.ps1 -Apps 7zip.7zip -WhatIf               # preview only
   ```
+  Before installing, the command line asks you to confirm that you accept the apps' licenses.
+  For unattended use, add `-AcceptPackageAgreements` to give that consent in advance.
 - **Italian / English** UI, chosen from your Windows language (`-Language it|en` to force).
 
 ### Requirements
@@ -63,6 +67,10 @@ Pin a specific release instead of `main`:
 ### App licenses
 
 CmdCrate only automates `winget`. Every app keeps its own license and terms (EULA), which you accept when you install it (`--accept-package-agreements`). CmdCrate is not affiliated with Microsoft or any listed publisher; names and trademarks belong to their owners.
+
+### Disclaimer
+
+CmdCrate is free software provided "as is", without warranty of any kind (see [LICENSE](LICENSE)). You use it at your own risk. You are responsible for checking and respecting the license of every app you install, and for how you use it. CmdCrate does not host, modify or redistribute any third-party software: apps are downloaded by winget from the sources listed in the Microsoft winget repository. The catalog is a convenience list, not an endorsement.
 
 ### Add an app to the catalog
 
@@ -98,11 +106,13 @@ Per usare una versione precisa invece di `main`:
 
 ### Funzionalità
 
-- **Interfaccia grafica** (WPF, inclusa in Windows): categorie, ricerca, seleziona tutte/nessuna per categoria, preset "Consigliate", link al sito ufficiale di ogni app.
+- **Interfaccia grafica** (WPF, inclusa in Windows): categorie, ricerca, seleziona tutte/nessuna per categoria, link al sito ufficiale di ogni app.
+- **Consigliate** (★): un clic seleziona le app consigliate non ancora installate.
+- **Nessun permesso di amministratore richiesto**: gli installer che ne hanno bisogno chiedono l'UAC da soli.
 - **Rilevamento app già installate**: segnate con ✓.
 - **Esporta / Importa**: esporta le app installate sul PC attuale in un file JSON (`winget export`) e reimportalo dopo un reset per preselezionare le stesse app. Le app non presenti nel catalogo finiscono in "Importate".
 - **Salva selezione** su file per riusarla su altri PC.
-- **Modalità riga di comando**: vedi gli esempi nella sezione inglese (`-Apps`, `-Import`, `-WhatIf`).
+- **Modalità riga di comando**: vedi gli esempi nella sezione inglese (`-Apps`, `-Import`, `-WhatIf`). Prima di installare chiede conferma dell'accettazione delle licenze; `-AcceptPackageAgreements` la dà in anticipo.
 - Interfaccia **italiano / inglese** in base alla lingua di Windows (`-Language it|en` per forzarla).
 
 ### Privacy e sicurezza (GDPR)
@@ -117,6 +127,10 @@ Per usare una versione precisa invece di `main`:
 ### Licenze delle app
 
 CmdCrate automatizza soltanto `winget`. Ogni app ha la propria licenza (EULA), che accetti al momento dell'installazione. CmdCrate non è affiliato a Microsoft né ai produttori elencati; nomi e marchi appartengono ai rispettivi titolari.
+
+### Esclusione di responsabilità
+
+CmdCrate è software gratuito fornito "così com'è", senza garanzie di alcun tipo (vedi [LICENSE](LICENSE)). Lo usi a tuo rischio. Sei responsabile di verificare e rispettare la licenza di ogni app che installi e dell'uso che ne fai. CmdCrate non ospita, non modifica e non ridistribuisce software di terze parti: le app vengono scaricate da winget dalle fonti indicate nel repository ufficiale Microsoft winget. Il catalogo è un elenco di comodità, non una raccomandazione commerciale.
 
 ---
 

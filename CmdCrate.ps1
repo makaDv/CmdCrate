@@ -29,6 +29,10 @@
 .PARAMETER NoLog
     Do not write a log file to disk.
 
+.PARAMETER AcceptPackageAgreements
+    Command-line mode: confirm in advance that you accept the license (EULA) of every app
+    being installed. Without it, CmdCrate asks for confirmation first.
+
 .EXAMPLE
     .\CmdCrate.ps1
     Opens the GUI.
@@ -48,11 +52,12 @@ param(
     [ValidateSet('auto', 'it', 'en')]
     [string]$Language = 'auto',
     [switch]$NoGui,
-    [switch]$NoLog
+    [switch]$NoLog,
+    [switch]$AcceptPackageAgreements
 )
 
 $ErrorActionPreference = 'Stop'
-$script:Version = '1.0.0'
+$script:Version = '1.0.1'
 
 # ---------------------------------------------------------------------------
 # Strings (IT / EN)
@@ -72,7 +77,9 @@ $script:Strings = @{
         Cancel           = 'Stop after current'
         OpenLogs         = 'Open log folder'
         DeleteData       = 'Delete local data'
-        RunAdmin         = 'Restart as administrator'
+        Recommended      = 'Recommended'
+        DefaultsSelected = '{0} recommended apps selected ({1} already installed, skipped).'
+        ConfirmCli       = 'Install {0} apps? Each app has its own license (EULA), accepted through winget.'
         All              = 'all'
         None             = 'none'
         Selected         = '{0} selected'
@@ -120,7 +127,9 @@ $script:Strings = @{
         Cancel           = 'Ferma dopo la corrente'
         OpenLogs         = 'Apri cartella log'
         DeleteData       = 'Elimina dati locali'
-        RunAdmin         = 'Riavvia come amministratore'
+        Recommended      = 'Consigliata'
+        DefaultsSelected = '{0} app consigliate selezionate ({1} già installate, escluse).'
+        ConfirmCli       = 'Installare {0} app? Ogni app ha la propria licenza (EULA), accettata tramite winget.'
         All              = 'tutte'
         None             = 'nessuna'
         Selected         = '{0} selezionate'
@@ -298,11 +307,6 @@ function Read-Catalog {
     return $cats
 }
 
-function Test-IsAdmin {
-    $id = [Security.Principal.WindowsIdentity]::GetCurrent()
-    return (New-Object Security.Principal.WindowsPrincipal($id)).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-}
-
 # ---------------------------------------------------------------------------
 # Prerequisites
 # ---------------------------------------------------------------------------
@@ -341,6 +345,12 @@ if ($cliMode) {
     if ($Import) { foreach ($id in (Get-IdFromFile $Import)) { $targets.Add($id) } }
     $targets = @($targets | Select-Object -Unique)
     if ($targets.Count -eq 0) { Write-Log $script:T.NothingSelected 'WARN'; exit 0 }
+
+    # Explicit consent to third-party licenses before anything is installed.
+    if (-not $WhatIfPreference -and -not $AcceptPackageAgreements) {
+        Write-Information ($targets -join ', ') -InformationAction Continue
+        if (-not $PSCmdlet.ShouldContinue(($script:T.ConfirmCli -f $targets.Count), 'CmdCrate')) { exit 0 }
+    }
 
     $count = @{ ok = 0; already = 0; fail = 0 }
     $i = 0
@@ -451,7 +461,6 @@ Add-Type -AssemblyName PresentationFramework, PresentationCore, WindowsBase
     <DockPanel Grid.Row="5" Margin="0,12,0,0" LastChildFill="False">
       <Button x:Name="OpenLogsButton" DockPanel.Dock="Left"/>
       <Button x:Name="DeleteDataButton" DockPanel.Dock="Left"/>
-      <Button x:Name="AdminButton" DockPanel.Dock="Left"/>
       <Button x:Name="InstallButton" DockPanel.Dock="Right" Style="{StaticResource Primary}" Margin="0"/>
       <Button x:Name="CancelButton" DockPanel.Dock="Right" IsEnabled="False"/>
     </DockPanel>
@@ -482,10 +491,8 @@ $ui.InstallButton.Content = $script:T.Install
 $ui.CancelButton.Content = $script:T.Cancel
 $ui.OpenLogsButton.Content = $script:T.OpenLogs
 $ui.DeleteDataButton.Content = $script:T.DeleteData
-$ui.AdminButton.Content = $script:T.RunAdmin
 $ui.StatusText.Text = $script:T.Ready
 $script:Window.Title = "CmdCrate $script:Version"
-if (Test-IsAdmin) { $ui.AdminButton.Visibility = 'Collapsed' }
 
 # ---------------------------------------------------------------------------
 # Catalog -> UI
@@ -493,6 +500,7 @@ if (Test-IsAdmin) { $ui.AdminButton.Visibility = 'Collapsed' }
 $script:Items = New-Object System.Collections.Generic.List[object]
 $script:Categories = @{}
 $script:InstalledIds = @{}
+$script:UserTouched = $false
 
 function New-Brush { param([string]$Hex) return [Windows.Media.BrushConverter]::new().ConvertFromString($Hex) }
 
@@ -553,9 +561,20 @@ function Add-AppRow {
     $cb.VerticalAlignment = 'Center'
     $cb.IsChecked = $App.Default
     $cb.ToolTip = '{0}  ({1})' -f $App.Description, $App.Id
-    $cb.Add_Click({ Update-Count })
+    $cb.Add_Click({ $script:UserTouched = $true; Update-Count })
     [Windows.Controls.DockPanel]::SetDock($cb, 'Left')
     [void]$row.Children.Add($cb)
+
+    if ($App.Default) {
+        $star = New-Object Windows.Controls.TextBlock
+        $star.Text = [char]0x2605
+        $star.Foreground = New-Brush '#D97706'
+        $star.VerticalAlignment = 'Center'
+        $star.Margin = '2,0,4,0'
+        $star.ToolTip = $script:T.Recommended
+        [Windows.Controls.DockPanel]::SetDock($star, 'Left')
+        [void]$row.Children.Add($star)
+    }
 
     $status = New-Object Windows.Controls.TextBlock
     $status.Margin = '8,0,0,0'
@@ -628,19 +647,40 @@ function Set-Selection {
 function Set-Busy {
     param([bool]$Busy)
     foreach ($n in 'InstallButton', 'ImportButton', 'ExportButton', 'SelectAllButton', 'SelectNoneButton',
-        'SelectDefaultsButton', 'DeleteDataButton', 'AdminButton', 'SaveSelButton') {
+        'SelectDefaultsButton', 'DeleteDataButton', 'SaveSelButton') {
         $script:UI[$n].IsEnabled = -not $Busy
     }
     $script:UI.CancelButton.IsEnabled = $Busy
     $script:UI.CategoryPanel.IsEnabled = -not $Busy
 }
 
+function Test-Installed {
+    param($Item)
+    return $script:InstalledIds.ContainsKey($Item.Id.ToLowerInvariant())
+}
+
 function Set-InstalledMark {
     foreach ($it in $script:Items) {
-        if ($script:InstalledIds.ContainsKey($it.Id.ToLowerInvariant())) {
+        if (Test-Installed $it) {
             $it.Status.Text = [char]0x2713 + ' ' + $script:T.Installed
+            # Recommended apps start ticked; untick the ones already on this PC
+            # unless the user has already changed the selection.
+            if (-not $script:UserTouched -and $it.Default) { $it.CheckBox.IsChecked = $false }
         }
     }
+    Update-Count
+}
+
+function Select-Recommended {
+    $skipped = 0
+    foreach ($it in $script:Items) {
+        $installed = Test-Installed $it
+        if ($it.Default -and $installed) { $skipped++ }
+        $it.CheckBox.IsChecked = [bool]($it.Default -and -not $installed)
+    }
+    Update-Count
+    $n = @($script:Items | Where-Object { $_.CheckBox.IsChecked }).Count
+    $script:UI.StatusText.Text = $script:T.DefaultsSelected -f $n, $skipped
 }
 
 try {
@@ -774,9 +814,9 @@ function Start-NextInstall {
 # Event handlers
 # ---------------------------------------------------------------------------
 $ui.SearchBox.Add_TextChanged({ Update-Filter })
-$ui.SelectAllButton.Add_Click({ Set-Selection { param($i) $i.Row.Visibility -eq 'Visible' -or $i.CheckBox.IsChecked } })
-$ui.SelectNoneButton.Add_Click({ Set-Selection { param($i) $false } })
-$ui.SelectDefaultsButton.Add_Click({ Set-Selection { param($i) $i.Default } })
+$ui.SelectAllButton.Add_Click({ $script:UserTouched = $true; Set-Selection { param($i) $i.Row.Visibility -eq 'Visible' -or $i.CheckBox.IsChecked } })
+$ui.SelectNoneButton.Add_Click({ $script:UserTouched = $true; Set-Selection { param($i) $false } })
+$ui.SelectDefaultsButton.Add_Click({ $script:UserTouched = $true; Select-Recommended })
 
 $ui.InstallButton.Add_Click({
         $selected = @($script:Items | Where-Object { $_.CheckBox.IsChecked })
@@ -836,6 +876,7 @@ $ui.ImportButton.Add_Click({
             Write-Log ($script:T.ImportFail -f $_.Exception.Message) 'ERROR'
             return
         }
+        $script:UserTouched = $true
         foreach ($it in $script:Items) { $it.CheckBox.IsChecked = $false }
         $added = 0
         foreach ($id in $ids) {
@@ -878,19 +919,6 @@ $ui.DeleteDataButton.Add_Click({
         $script:FileLogging = $false
         if (Test-Path -LiteralPath $script:DataDir) { Remove-Item -LiteralPath $script:DataDir -Recurse -Force -ErrorAction SilentlyContinue }
         Write-Log $script:T.DeleteDone
-    })
-
-$ui.AdminButton.Add_Click({
-        if (-not $PSCommandPath) { return }
-        $hostExe = (Get-Process -Id $PID).Path
-        $relaunchArgs = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-STA', '-File', "`"$PSCommandPath`"",
-            '-CatalogPath', "`"$CatalogPath`"", '-Language', $Language)
-        if (-not $script:FileLogging) { $relaunchArgs += '-NoLog' }
-        try {
-            Start-Process -FilePath $hostExe -ArgumentList $relaunchArgs -Verb RunAs
-            $script:Window.Close()
-        }
-        catch { Write-Log $_.Exception.Message 'WARN' }
     })
 
 $script:Window.Add_Closing({
