@@ -3,7 +3,7 @@
 **Reinstall all your Windows apps with one command, choosing them from a GUI.**
 **Reinstalla tutte le tue app Windows con un solo comando, scegliendole da un'interfaccia grafica.**
 
-[English](#english) · [Italiano](#italiano)
+[English](#english) · [Italiano](#italiano) · **[User guide / Guida all'uso](GUIDE.md)**
 
 ![PowerShell 5.1+](https://img.shields.io/badge/PowerShell-5.1%2B-blue) ![Windows 10/11](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D6) ![License: MIT](https://img.shields.io/badge/License-MIT-green) ![No telemetry](https://img.shields.io/badge/telemetry-none-brightgreen)
 

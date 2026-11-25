@@ -1,5 +1,4 @@
-﻿#Requires -Version 5.1
-<#
+﻿<#
 .SYNOPSIS
     CmdCrate - reinstall your Windows apps with winget, choosing them from a GUI.
 
@@ -44,6 +43,7 @@
 .LINK
     https://github.com/makaDv/CmdCrate
 #>
+#Requires -Version 5.1
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [string]$CatalogPath,
