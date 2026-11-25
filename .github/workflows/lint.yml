@@ -1,0 +1,51 @@
+name: lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: PSScriptAnalyzer (errors fail the build)
+        shell: pwsh
+        run: |
+          Install-Module PSScriptAnalyzer -Scope CurrentUser -Force
+          $r = Invoke-ScriptAnalyzer -Path . -Recurse -Severity Error,Warning
+          $r | Format-Table -AutoSize | Out-String -Width 200 | Write-Host
+          if ($r | Where-Object Severity -eq 'Error') { exit 1 }
+
+      - name: Validate apps.json
+        shell: pwsh
+        run: |
+          $json = Get-Content apps.json -Raw | ConvertFrom-Json
+          $pattern = '^[A-Za-z0-9][A-Za-z0-9._+\-]{0,127}$'
+          $seen = @{}
+          $bad = 0
+          foreach ($c in $json.categories) {
+            foreach ($a in $c.apps) {
+              if ($a.id -notmatch $pattern) { Write-Host "Invalid id: $($a.id)"; $bad++ }
+              if ($seen.ContainsKey($a.id)) { Write-Host "Duplicate id: $($a.id)"; $bad++ }
+              if ($a.homepage -and $a.homepage -notmatch '^https://') { Write-Host "Non-https homepage: $($a.id)"; $bad++ }
+              $seen[$a.id] = $true
+            }
+          }
+          if ($bad) { exit 1 }
+          Write-Host "$($seen.Count) apps OK"
+
+      - name: Verify checksums.txt
+        shell: pwsh
+        run: |
+          foreach ($line in Get-Content checksums.txt) {
+            $hash, $file = $line -split '\s+', 2
+            $actual = (Get-FileHash $file -Algorithm SHA256).Hash.ToLowerInvariant()
+            if ($actual -ne $hash) { Write-Host "Checksum mismatch: $file (run tools/Update-Checksums.ps1)"; exit 1 }
+          }
+          Write-Host 'checksums OK'

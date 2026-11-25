@@ -1,0 +1,90 @@
+{
+  "version": "1.0.0",
+  "categories": [
+    {
+      "name": "Browser",
+      "apps": [
+        { "id": "Google.Chrome", "name": "Google Chrome", "description": "Web browser by Google", "homepage": "https://www.google.com/chrome/", "default": true },
+        { "id": "Mozilla.Firefox", "name": "Mozilla Firefox", "description": "Open-source, privacy-focused web browser", "homepage": "https://www.mozilla.org/firefox/", "default": false },
+        { "id": "Brave.Brave", "name": "Brave", "description": "Chromium browser with built-in ad/tracker blocking", "homepage": "https://brave.com/", "default": false },
+        { "id": "Microsoft.Edge", "name": "Microsoft Edge", "description": "Web browser by Microsoft", "homepage": "https://www.microsoft.com/edge", "default": false }
+      ]
+    },
+    {
+      "name": "Development",
+      "apps": [
+        { "id": "Git.Git", "name": "Git", "description": "Distributed version control system", "homepage": "https://git-scm.com/", "default": true },
+        { "id": "GitHub.cli", "name": "GitHub CLI", "description": "GitHub on the command line", "homepage": "https://cli.github.com/", "default": false },
+        { "id": "GitHub.GitHubDesktop", "name": "GitHub Desktop", "description": "Graphical Git client for GitHub", "homepage": "https://desktop.github.com/", "default": false },
+        { "id": "Microsoft.VisualStudioCode", "name": "Visual Studio Code", "description": "Lightweight code editor", "homepage": "https://code.visualstudio.com/", "default": true },
+        { "id": "Microsoft.WindowsTerminal", "name": "Windows Terminal", "description": "Modern terminal for Windows", "homepage": "https://aka.ms/terminal", "default": true },
+        { "id": "OpenJS.NodeJS.LTS", "name": "Node.js LTS", "description": "JavaScript runtime (long-term support)", "homepage": "https://nodejs.org/", "default": false },
+        { "id": "Python.Python.3.14", "name": "Python 3.14", "description": "Python programming language", "homepage": "https://www.python.org/", "default": false },
+        { "id": "Notepad++.Notepad++", "name": "Notepad++", "description": "Source code and text editor", "homepage": "https://notepad-plus-plus.org/", "default": false },
+        { "id": "MongoDB.Compass.Full", "name": "MongoDB Compass", "description": "GUI for MongoDB", "homepage": "https://www.mongodb.com/products/compass", "default": false },
+        { "id": "MariaDB.Server", "name": "MariaDB Server", "description": "Open-source relational database", "homepage": "https://mariadb.org/", "default": false },
+        { "id": "JRSoftware.InnoSetup", "name": "Inno Setup", "description": "Installer builder for Windows programs", "homepage": "https://jrsoftware.org/isinfo.php", "default": false },
+        { "id": "WiresharkFoundation.Wireshark", "name": "Wireshark", "description": "Network protocol analyzer", "homepage": "https://www.wireshark.org/", "default": false }
+      ]
+    },
+    {
+      "name": "AI",
+      "apps": [
+        { "id": "Anthropic.Claude", "name": "Claude", "description": "Claude desktop app by Anthropic", "homepage": "https://claude.ai/download", "default": false },
+        { "id": "OpenAI.ChatGPT", "name": "ChatGPT", "description": "ChatGPT desktop app by OpenAI", "homepage": "https://openai.com/chatgpt/download/", "default": false },
+        { "id": "Ollama.Ollama", "name": "Ollama", "description": "Run large language models locally", "homepage": "https://ollama.com/", "default": false }
+      ]
+    },
+    {
+      "name": "Communication",
+      "apps": [
+        { "id": "Telegram.TelegramDesktop", "name": "Telegram Desktop", "description": "Messaging app", "homepage": "https://desktop.telegram.org/", "default": false },
+        { "id": "Discord.Discord", "name": "Discord", "description": "Voice, video and text chat", "homepage": "https://discord.com/", "default": false },
+        { "id": "Microsoft.Teams", "name": "Microsoft Teams", "description": "Meetings and team chat", "homepage": "https://www.microsoft.com/microsoft-teams", "default": false },
+        { "id": "Notion.Notion", "name": "Notion", "description": "Notes, docs and workspace", "homepage": "https://www.notion.so/", "default": false }
+      ]
+    },
+    {
+      "name": "Media & Creativity",
+      "apps": [
+        { "id": "VideoLAN.VLC", "name": "VLC media player", "description": "Plays almost any audio/video format", "homepage": "https://www.videolan.org/vlc/", "default": true },
+        { "id": "OBSProject.OBSStudio", "name": "OBS Studio", "description": "Screen recording and live streaming", "homepage": "https://obsproject.com/", "default": false },
+        { "id": "Spotify.Spotify", "name": "Spotify", "description": "Music streaming", "homepage": "https://www.spotify.com/", "default": false },
+        { "id": "GIMP.GIMP.3", "name": "GIMP 3", "description": "Open-source image editor", "homepage": "https://www.gimp.org/", "default": false },
+        { "id": "ByteDance.CapCut", "name": "CapCut", "description": "Video editor", "homepage": "https://www.capcut.com/", "default": false },
+        { "id": "ShareX.ShareX", "name": "ShareX", "description": "Screenshot and screen capture tool", "homepage": "https://getsharex.com/", "default": false }
+      ]
+    },
+    {
+      "name": "Gaming",
+      "apps": [
+        { "id": "Valve.Steam", "name": "Steam", "description": "Game store and launcher by Valve", "homepage": "https://store.steampowered.com/", "default": false },
+        { "id": "EpicGames.EpicGamesLauncher", "name": "Epic Games Launcher", "description": "Game store and launcher by Epic Games", "homepage": "https://store.epicgames.com/", "default": false },
+        { "id": "ElectronicArts.EADesktop", "name": "EA app", "description": "Game launcher by Electronic Arts", "homepage": "https://www.ea.com/ea-app", "default": false },
+        { "id": "Ubisoft.Connect", "name": "Ubisoft Connect", "description": "Game launcher by Ubisoft", "homepage": "https://ubisoftconnect.com/", "default": false },
+        { "id": "RockstarGames.Launcher", "name": "Rockstar Games Launcher", "description": "Game launcher by Rockstar Games", "homepage": "https://www.rockstargames.com/", "default": false }
+      ]
+    },
+    {
+      "name": "Utilities & System",
+      "apps": [
+        { "id": "7zip.7zip", "name": "7-Zip", "description": "File archiver (zip, 7z, rar...)", "homepage": "https://www.7-zip.org/", "default": true },
+        { "id": "Microsoft.PowerToys", "name": "PowerToys", "description": "Power-user utilities for Windows", "homepage": "https://learn.microsoft.com/windows/powertoys/", "default": false },
+        { "id": "voidtools.Everything", "name": "Everything", "description": "Instant file search", "homepage": "https://www.voidtools.com/", "default": false },
+        { "id": "qBittorrent.qBittorrent", "name": "qBittorrent", "description": "Open-source BitTorrent client", "homepage": "https://www.qbittorrent.org/", "default": false },
+        { "id": "Tailscale.Tailscale", "name": "Tailscale", "description": "Zero-config mesh VPN", "homepage": "https://tailscale.com/", "default": false },
+        { "id": "Famatech.AdvancedIPScanner", "name": "Advanced IP Scanner", "description": "Local network scanner", "homepage": "https://www.advanced-ip-scanner.com/", "default": false },
+        { "id": "CPUID.CPU-Z", "name": "CPU-Z", "description": "CPU, motherboard and RAM information", "homepage": "https://www.cpuid.com/softwares/cpu-z.html", "default": false },
+        { "id": "CharlesMilette.TranslucentTB", "name": "TranslucentTB", "description": "Transparent Windows taskbar", "homepage": "https://github.com/TranslucentTB/TranslucentTB", "default": false }
+      ]
+    },
+    {
+      "name": "Hardware vendors",
+      "apps": [
+        { "id": "Logitech.GHUB", "name": "Logitech G HUB", "description": "Software for Logitech G gaming devices", "homepage": "https://www.logitechg.com/innovation/g-hub.html", "default": false },
+        { "id": "Logitech.Options", "name": "Logitech Options", "description": "Software for Logitech mice and keyboards", "homepage": "https://www.logitech.com/software/options.html", "default": false },
+        { "id": "MSI.MSICenter", "name": "MSI Center", "description": "Control center for MSI hardware", "homepage": "https://www.msi.com/Landing/MSI-Center", "default": false }
+      ]
+    }
+  ]
+}

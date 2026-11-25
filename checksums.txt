@@ -1,0 +1,2 @@
+cf120e4bed9a5f6e837398dee486b93c9e2b6cdc63f7a39bdc5de98a1d64eb42  CmdCrate.ps1
+5542142ad2271ed491f2658fd2aa7f04474fc52b9ddddb2dce33fd21db68096c  apps.json
