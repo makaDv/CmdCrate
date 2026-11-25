@@ -28,7 +28,7 @@ Nothing is installed until you press the button and confirm.
 Pin a specific release instead of `main`:
 
 ```powershell
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/makaDv/CmdCrate/main/install.ps1))) -Ref v1.0.0
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/makaDv/CmdCrate/main/install.ps1))) -Ref v1.0.1
 ```
 
 ### Features
@@ -101,7 +101,7 @@ Nulla viene installato finché non premi il pulsante.
 Per usare una versione precisa invece di `main`:
 
 ```powershell
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/makaDv/CmdCrate/main/install.ps1))) -Ref v1.0.0
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/makaDv/CmdCrate/main/install.ps1))) -Ref v1.0.1
 ```
 
 ### Funzionalità

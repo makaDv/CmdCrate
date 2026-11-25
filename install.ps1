@@ -3,7 +3,7 @@
 #   irm https://raw.githubusercontent.com/makaDv/CmdCrate/main/install.ps1 | iex
 #
 # Pin a release instead of main:
-#   & ([scriptblock]::Create((irm https://raw.githubusercontent.com/makaDv/CmdCrate/main/install.ps1))) -Ref v1.0.0
+#   & ([scriptblock]::Create((irm https://raw.githubusercontent.com/makaDv/CmdCrate/main/install.ps1))) -Ref v1.0.1
 #
 # What it does:
 #   1. downloads CmdCrate.ps1, apps.json and checksums.txt from GitHub into a new temp folder
